@@ -1,9 +1,11 @@
 # Builds the Windows installer and publishes it on the Releases page.
-# Runs when a version tag is pushed (for example v1.0.1). The installed app finds the new release by itself and updates.
+# Runs when package.json changes on main (that is where the version number lives), or by hand from the Actions page.
+# electron-builder makes the release (and its tag, for example v1.0.1); installed programs find it and update themselves.
 name: Build Windows installer
 on:
   push:
-    tags: ['v*']
+    branches: [main]
+    paths: ['package.json']
   workflow_dispatch:
 permissions:
   contents: write

@@ -13,8 +13,7 @@ The first time, Windows may say "Windows protected your PC" (the program is not 
 
 ## Making a new version (for the developer)
 
-1. Raise `"version"` in `package.json` (for example 1.0.1).
-2. Commit, then push a tag with the same number: `git tag v1.0.1 && git push origin v1.0.1`.
-3. GitHub builds the installer (about 5 minutes) and puts it on the Releases page. Installed programs pick it up by themselves.
+1. Raise `"version"` in `package.json` (for example 1.0.1), commit and push to `main`.
+2. GitHub builds the installer (about 5 minutes) and puts it on the Releases page as v1.0.1. Installed programs pick it up by themselves.
 
 This folder holds no passwords or keys: it only opens the public web address.
