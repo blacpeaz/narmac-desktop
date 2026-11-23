@@ -1,11 +1,11 @@
 # Builds the Windows installer and publishes it on the Releases page.
-# Runs when package.json changes on main (that is where the version number lives), or by hand from the Actions page.
-# electron-builder makes the release (and its tag, for example v1.0.1); installed programs find it and update themselves.
+# Runs when package.json, main.js, offline.html or this file changes on main, or by hand from the Actions page.
+# The release is named after the version in package.json (for example v1.0.2); installed programs find it and update themselves.
 name: Build Windows installer
 on:
   push:
     branches: [main]
-    paths: ['package.json', 'main.js', '.github/workflows/build.yml']
+    paths: ['package.json', 'main.js', 'offline.html', '.github/workflows/build.yml']
   workflow_dispatch:
 permissions:
   contents: write
@@ -16,8 +16,33 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - run: npm install
-      - run: npx electron-builder --win --publish always
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Read the version
+        id: v
+        shell: bash
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Build the installer
+        shell: bash
+        run: npx electron-builder --win --publish never 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+      - name: Publish the release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.v.outputs.version }}
+          name: Narmac Societe ${{ steps.v.outputs.version }}
+          body: "Windows installer for Narmac Societe. Download **Narmac-Societe-Setup-${{ steps.v.outputs.version }}.exe** below. Installed copies update themselves."
+          make_latest: true
+          files: |
+            dist/Narmac-Societe-Setup-*.exe
+            dist/Narmac-Societe-Setup-*.exe.blockmap
+            dist/latest.yml
+      # if anything failed, keep the build log where it can be read without signing in
+      - name: Save the build log
+        if: failure()
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-log
+          name: Build log (last failed build)
+          prerelease: true
+          make_latest: false
+          files: build.log
