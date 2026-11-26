@@ -1,0 +1,51 @@
+# Builds the Android app (unsigned) and puts it, with the signing tool, on the "android-build" release.
+# It is then signed with the private key (kept off GitHub) and served from https://narmacsociete.netlify.app/app/Narmac-Societe.apk
+# The app's screens come from the website, so a new build is only needed for a new icon or name.
+name: Build Android app
+on:
+  push:
+    branches: [main]
+    paths: ['android/**', '.github/workflows/android.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+      - name: Build
+        run: gradle -p android assembleRelease --no-daemon 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+      - name: Align and add the signing tool
+        run: |
+          BT=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -1)
+          mkdir out
+          $BT/zipalign -p -f 4 android/app/build/outputs/apk/release/app-release-unsigned.apk out/Narmac-Societe-unsigned.apk
+          cp $BT/lib/apksigner.jar out/apksigner.jar
+          ls -la out
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-build
+          name: Android build (unsigned, for signing)
+          prerelease: true
+          make_latest: false
+          files: |
+            out/Narmac-Societe-unsigned.apk
+            out/apksigner.jar
+      - name: Save the build log
+        if: failure()
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-log-android
+          name: Build log (last failed Android build)
+          prerelease: true
+          make_latest: false
+          files: build.log

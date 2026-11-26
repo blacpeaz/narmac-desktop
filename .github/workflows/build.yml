@@ -25,6 +25,9 @@ jobs:
       - name: Build the installer
         shell: bash
         run: npx electron-builder --win --publish never 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+      - name: Copy with a fixed name (link in the app's Settings)
+        shell: bash
+        run: cp "dist/Narmac-Societe-Setup-${{ steps.v.outputs.version }}.exe" dist/Narmac-Societe-Setup.exe
       - name: Publish the release
         uses: softprops/action-gh-release@v2
         with:
@@ -36,6 +39,7 @@ jobs:
             dist/Narmac-Societe-Setup-*.exe
             dist/Narmac-Societe-Setup-*.exe.blockmap
             dist/latest.yml
+            dist/Narmac-Societe-Setup.exe
       # if anything failed, keep the build log where it can be read without signing in
       - name: Save the build log
         if: failure()

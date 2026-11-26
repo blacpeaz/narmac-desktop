@@ -1,0 +1,18 @@
+// Narmac Societe for Android: opens https://narmacsociete.netlify.app full screen (a "trusted web activity").
+// The app's screens come from the website, so it updates by itself; this shell only changes for a new icon/name.
+// To make a new shell: raise versionCode and versionName, push; GitHub builds it, then it is signed with the private key.
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.narmacsociete.stockbook'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'com.narmacsociete.stockbook'
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.0'
+    }
+    buildTypes { release { minifyEnabled false } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
+dependencies { implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0' }

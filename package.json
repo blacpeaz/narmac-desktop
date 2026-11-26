@@ -1,7 +1,7 @@
 {
   "name": "narmac-desktop",
   "productName": "Narmac Societe",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Narmac Societe stock app for Windows",
   "author": "Narmac Societe",
   "main": "main.js",
