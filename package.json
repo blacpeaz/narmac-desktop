@@ -1,7 +1,7 @@
 {
   "name": "narmac-desktop",
   "productName": "Narmac Societe",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Narmac Societe stock app for Windows",
   "author": "Narmac Societe",
   "main": "main.js",
@@ -20,11 +20,26 @@
     "appId": "com.narmacsociete.stockbook",
     "productName": "Narmac Societe",
     "copyright": "Narmac Societe",
-    "files": ["main.js", "offline.html", "package.json"],
-    "directories": { "buildResources": "build", "output": "dist" },
+    "files": [
+      "main.js",
+      "offline.html",
+      "package.json",
+      "build/icon.ico"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
     "win": {
-      "target": [{ "target": "nsis", "arch": ["x64"] }],
-      "icon": "build/icon.png"
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico"
     },
     "nsis": {
       "oneClick": true,
@@ -32,8 +47,18 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Narmac Societe",
-      "artifactName": "Narmac-Societe-Setup-${version}.${ext}"
+      "artifactName": "Narmac-Societe-Setup-${version}.${ext}",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico"
     },
-    "publish": [{ "provider": "github", "owner": "blacpeaz", "repo": "narmac-desktop", "releaseType": "release" }]
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "blacpeaz",
+        "repo": "narmac-desktop",
+        "releaseType": "release"
+      }
+    ]
   }
 }

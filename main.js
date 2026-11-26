@@ -25,7 +25,7 @@ function createWindow() {
   win = new BrowserWindow({
     x: b.x, y: b.y, width: b.width || 1280, height: b.height || 820, minWidth: 380, minHeight: 500,
     title: 'Narmac Societe', backgroundColor: '#12233f', autoHideMenuBar: true, show: false,
-    icon: path.join(__dirname, 'build', 'icon.png'),
+    icon: path.join(__dirname, 'build', 'icon.ico'),
     webPreferences: { contextIsolation: true, sandbox: true, spellcheck: true }
   });
   if (b.max) win.maximize();
